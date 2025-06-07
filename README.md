@@ -36,7 +36,7 @@ Set them in your shell before running tests:
 
 - Clone the repository
 
-```git clone https://github.com/your-username/apidemos-appium-tests.git```
+```git clone https://github.com/oriahuzov/apidemos.git```
 
 - Export required environment variables as shown above
 - Run all tests
