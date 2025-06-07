@@ -18,7 +18,7 @@
 
 - Appium 2.19.0
 
-- Android Virtual Device (AVD) (e.g. Pixel_9)
+- Android Virtual Device (AVD) (Pixel_9 is used by default for all tests, hence it should be installed on a device)
 
 ### Environment Variables
 | Variable       | Description | Default        |
@@ -28,7 +28,7 @@
 
 Set them in your shell before running tests:
 
-```export AVD_NAME=Pixel_9```
+```export AVD_NAME=your_device (if not specified, Pixel_9 will be used by default)```
 
 ```export EXTERNAL_APPIUM=true (if needed)```
 
