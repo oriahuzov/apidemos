@@ -17,6 +17,14 @@ import java.util.Optional;
 @Slf4j
 public class AppiumDriverFactory {
     public static final int DEFAULT_TIMEOUT = 20; // in seconds
+    public static final Duration AVD_LAUNCH_TIMEOUT = Duration.ofSeconds(120);
+    public static final String EXTERNAL_APPIUM_ENV = "EXTERNAL_APPIUM";
+    public static final String AVD_NAME_ENV = "AVD_NAME";
+    public static final String AVD_DEFAULT_NAME = "Pixel_9";
+    public static final String APPIUM_DEFAULT_SERVER_URL = "http://127.0.0.1:4723/wd/hub";
+    public static final String PLATFORM_NAME = "Android";
+    public static final String AUTOMATION_NAME = "UiAutomator2";
+    public static final File APP_PATH = new File(System.getProperty("user.dir") + "/app/ApiDemos.apk");
     private static AndroidDriver driver;
     private static AppiumDriverLocalService service;
 
@@ -31,7 +39,7 @@ public class AppiumDriverFactory {
             return driver;
         }
 
-        if (!Boolean.parseBoolean(System.getenv().getOrDefault("EXTERNAL_APPIUM", "false"))) {
+        if (!Boolean.parseBoolean(System.getenv().getOrDefault(EXTERNAL_APPIUM_ENV, "false"))) {
             service = startAppiumServer();
         } else {
             log.info("EXTERNAL_APPIUM=true, skipping programmatic server startup.");
@@ -45,7 +53,7 @@ public class AppiumDriverFactory {
                 serverUrl = service.getUrl();
                 log.info("Using programmatic Appium server at: {}", serverUrl);
             } else {
-                serverUrl = new java.net.URL("http://127.0.0.1:4723/wd/hub");
+                serverUrl = new java.net.URL(APPIUM_DEFAULT_SERVER_URL);
                 log.info("Using default Appium server URL: {}", serverUrl);
             }
 
@@ -83,22 +91,20 @@ public class AppiumDriverFactory {
      * Builds UiAutomator2Options instance.
      */
     private static UiAutomator2Options buildOptions() {
-        var avdName = Optional.ofNullable(System.getenv("AVD_NAME"))
+        var avdName = Optional.ofNullable(System.getenv(AVD_NAME_ENV))
                 .filter(name -> !name.isBlank())
-                .orElse("Pixel_9");
+                .orElse(AVD_DEFAULT_NAME);
 
-        var projectDir = System.getProperty("user.dir");
-        var apkFile = new File(projectDir + "/app/ApiDemos.apk");
-        if (!apkFile.exists()) {
-            throw new IllegalStateException("Could not find ApiDemos.apk at: " + apkFile.getAbsolutePath());
+        if (!APP_PATH.exists()) {
+            throw new IllegalStateException("Could not find ApiDemos.apk at: " + APP_PATH.getAbsolutePath());
         }
 
         return new UiAutomator2Options()
-                .setPlatformName("Android")
-                .setAutomationName("UiAutomator2")
+                .setPlatformName(PLATFORM_NAME)
+                .setAutomationName(AUTOMATION_NAME)
                 .setAvd(avdName)
-                .setAvdLaunchTimeout(Duration.ofSeconds(120))
-                .setApp(apkFile.getAbsolutePath())
+                .setAvdLaunchTimeout(AVD_LAUNCH_TIMEOUT)
+                .setApp(APP_PATH.getAbsolutePath())
                 .setNoReset(false)
                 .setSkipDeviceInitialization(true);
     }
