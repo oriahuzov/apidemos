@@ -14,7 +14,7 @@
 
 - Java 17
 
-- Android SDK 35.0.0 & Command-Line Tools (adb, emulator) 
+- Android SDK 35.0.0 & Command-Line Tools (adb, emulator, uiautomator2 driver) 
 
 - Appium 2.19.0
 
